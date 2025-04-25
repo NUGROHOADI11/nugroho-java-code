@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "1033602776342",
+    "project_id": "java-code-50d3d",
+    "storage_bucket": "java-code-50d3d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1033602776342:android:401ee6bcce7fedc09aa437",
+        "android_client_info": {
+          "package_name": "com.nugroho.javacode"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1033602776342-os5ec113lo294hjv29n07lkgrguppkfv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDN1jgdjbtt3sF5-r3PHzCM0U8KXyIEbYE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1033602776342-os5ec113lo294hjv29n07lkgrguppkfv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1033602776342-bfo2h3cjovfal6tgu7ji31t6if32op7q.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.venturoCore"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1033602776342:android:1776a15b753a03ce9aa437",
+        "android_client_info": {
+          "package_name": "com.venturo.javacode"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1033602776342-os5ec113lo294hjv29n07lkgrguppkfv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDN1jgdjbtt3sF5-r3PHzCM0U8KXyIEbYE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1033602776342-os5ec113lo294hjv29n07lkgrguppkfv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1033602776342-bfo2h3cjovfal6tgu7ji31t6if32op7q.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.venturoCore"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
