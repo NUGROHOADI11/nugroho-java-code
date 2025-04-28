@@ -10,19 +10,26 @@ class PesananController extends GetxController {
   var selectedFilter = 'Semua'.obs;
   final selectedDate = Rx<DateTime?>(null);
 
-  final orders = <Order>[].obs;
+  final allOrders = <Order>[].obs;
+  final ongoingOrders = <Order>[].obs;   
+  final historyOrders = <Order>[].obs;   
+
+  final displayedOngoing = <Order>[].obs; 
+  final displayedHistory = <Order>[].obs; 
+
   final logger = Logger();
   final isLoading = false.obs;
-  final isLoadingMore = false.obs;
-  final hasMore = true.obs;
+  final isLoadingMoreOngoing = false.obs;
+  final isLoadingMoreHistory = false.obs;
+  final hasMoreOngoing = true.obs;
+  final hasMoreHistory = true.obs;
   final errorMessage = ''.obs;
-  final currentPage = 1.obs;
-  final int perPage = 10;
 
+  final int perPage = 10;
   final int? idUser = LocalStorageService.getUserData()["id_user"];
 
   @override
-  onInit() {
+  void onInit() {
     super.onInit();
     fetchOrders();
   }
@@ -31,8 +38,8 @@ class PesananController extends GetxController {
     try {
       isLoading(true);
       errorMessage('');
-      currentPage(1);
-      hasMore(true);
+      hasMoreOngoing(true);
+      hasMoreHistory(true);
 
       final response = await DioService.getOrderByUserId(idUser!);
 
@@ -41,8 +48,13 @@ class PesananController extends GetxController {
       }
 
       if (response["data"] == null) {
-        orders.assignAll([]);
-        hasMore(false);
+        allOrders.clear();
+        ongoingOrders.clear();
+        historyOrders.clear();
+        displayedOngoing.clear();
+        displayedHistory.clear();
+        hasMoreOngoing(false);
+        hasMoreHistory(false);
         return;
       }
 
@@ -61,8 +73,18 @@ class PesananController extends GetxController {
             .toList();
         parsedOrders.sort((a, b) => b.date.compareTo(a.date));
 
-        orders.assignAll(parsedOrders);
-        hasMore(parsedOrders.length == perPage);
+        allOrders.assignAll(parsedOrders);
+
+        ongoingOrders.assignAll(
+            allOrders.where((o) => o.status.value < 3).toList());
+        historyOrders.assignAll(
+            allOrders.where((o) => o.status.value == 3 || o.status.value == 4).toList());
+
+        displayedOngoing.assignAll(ongoingOrders.take(perPage).toList());
+        displayedHistory.assignAll(historyOrders.take(perPage).toList());
+
+        hasMoreOngoing(ongoingOrders.length > displayedOngoing.length);
+        hasMoreHistory(historyOrders.length > displayedHistory.length);
       } else {
         throw Exception("Data pesanan tidak valid");
       }
@@ -79,8 +101,44 @@ class PesananController extends GetxController {
     }
   }
 
-  List<Order> getOrdersByStatus(int statusValue) {
-    return orders.where((order) => order.status.value == statusValue).toList();
+  Future<void> loadMoreOngoing() async {
+    if (isLoadingMoreOngoing.value || !hasMoreOngoing.value) return;
+
+    try {
+      isLoadingMoreOngoing(true);
+
+      await Future.delayed(const Duration(seconds: 1));
+
+      final nextItems =
+          ongoingOrders.skip(displayedOngoing.length).take(perPage).toList();
+      displayedOngoing.addAll(nextItems);
+
+      hasMoreOngoing(displayedOngoing.length < ongoingOrders.length);
+    } catch (e) {
+      logger.e('Error loading more ongoing orders: $e');
+    } finally {
+      isLoadingMoreOngoing(false);
+    }
+  }
+
+  Future<void> loadMoreHistory() async {
+    if (isLoadingMoreHistory.value || !hasMoreHistory.value) return;
+
+    try {
+      isLoadingMoreHistory(true);
+
+      await Future.delayed(const Duration(seconds: 1));
+
+      final nextItems =
+          historyOrders.skip(displayedHistory.length).take(perPage).toList();
+      displayedHistory.addAll(nextItems);
+
+      hasMoreHistory(displayedHistory.length < historyOrders.length);
+    } catch (e) {
+      logger.e('Error loading more history orders: $e');
+    } finally {
+      isLoadingMoreHistory(false);
+    }
   }
 
   void applyDateFilter(DateTime date) {
@@ -88,6 +146,6 @@ class PesananController extends GetxController {
   }
 
   int getActiveOrderCount() {
-    return orders.where((order) => order.status.value < 4).length;
+    return allOrders.where((order) => order.status.value < 3).length;
   }
 }

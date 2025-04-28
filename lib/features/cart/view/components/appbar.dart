@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nugroho_javacode/features/cart/controllers/cart_controller.dart';
 
 import '../../../../configs/routes/route.dart';
 import '../../../../shared/styles/color_style.dart';
@@ -10,6 +11,12 @@ AppBar buildAppBar() {
       icon: const Icon(Icons.arrow_back, color: ColorStyle.primary),
       onPressed: () => Get.offAllNamed(Routes.homeRoute),
     ),
+    actions: [
+      IconButton(
+        icon: const Icon(Icons.delete, color: ColorStyle.primary),
+        onPressed: () => CartController.to.clearCart(),
+      ),
+    ],
     title: Row(
       mainAxisSize: MainAxisSize.min,
       children: [

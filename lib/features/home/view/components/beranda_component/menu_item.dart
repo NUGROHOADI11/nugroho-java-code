@@ -141,11 +141,11 @@ Widget _buildQuantityControls(int id, String name, int price, int quantity,
 
 void _handleDecreaseQuantity(
     int productId, int currentQuantity, cartController) {
-  final index = cartController.items.indexWhere((i) => i.menuId == productId);
+  final index = cartController.cartItems.indexWhere((i) => i.menuId == productId);
   if (index == -1) return;
 
   if (currentQuantity > 1) {
-    final item = cartController.items[index];
+    final item = cartController.cartItems[index];
     final updatedItem = item.copyWith(
             jumlah: item.jumlah - 1,
           );
@@ -194,7 +194,7 @@ void _handleDecreaseQuantity(
 
 void _handleIncreaseQuantity(
     int productId, String name, int price, String image, cartController) {
-  final index = cartController.items.indexWhere((i) => i.menuId == productId);
+  final index = cartController.cartItems.indexWhere((i) => i.menuId == productId);
 
   if (index != -1) {
     final item = cartController.items[index];

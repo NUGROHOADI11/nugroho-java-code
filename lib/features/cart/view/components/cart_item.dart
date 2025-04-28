@@ -13,9 +13,9 @@ Widget buildCartItemsList() {
   return Expanded(
     child: ListView.builder(
       padding: EdgeInsets.all(14.r),
-      itemCount: CartController.to.items.length,
+      itemCount: CartController.to.cartItems.length,
       itemBuilder: (context, index) {
-        final item = CartController.to.items[index];
+        final item = CartController.to.cartItems[index];
         return _buildCartItem(item, index);
       },
     ),
@@ -37,7 +37,7 @@ Widget _buildCartItem(CartItemModel item, int index) {
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: Padding(
-        padding: EdgeInsets.all(10.r),
+        padding: EdgeInsets.all(8.r),
         child: Row(
           children: [
             _buildItemImage(item),
@@ -72,12 +72,12 @@ Widget _buildItemImage(CartItemModel item) {
       borderRadius: BorderRadius.circular(8.r),
       child: Image.network(
         item.imageUrl ?? ImageConstant.foodChickenSlam,
-        width: 45.w,
-        height: 45.w,
+        width: 70.w,
+        height: 70.w,
         fit: BoxFit.contain,
         errorBuilder: (context, error, stackTrace) => Icon(
           Icons.image_not_supported_outlined,
-          size: 45.w,
+          size: 70.w,
           color: Colors.grey,
         ),
       ),
@@ -134,7 +134,7 @@ Widget _buildItemPrice(CartItemModel item) {
     List<String> parts = [];
     if (levelPrice > 0) parts.add(levelPrice.formatCurrency());
     if (toppingPrice > 0) parts.add(toppingPrice.formatCurrency());
-    detail = ' (${parts.join(' , ')})';
+    detail = ' (${parts.join(', ')})';
   }
 
   return Text(

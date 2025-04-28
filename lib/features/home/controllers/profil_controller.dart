@@ -7,6 +7,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:nugroho_javacode/features/cart/controllers/cart_controller.dart';
 
 import '../../../configs/routes/route.dart';
 import '../../../shared/styles/color_style.dart';
@@ -62,7 +63,6 @@ class ProfilController extends GetxController {
       user.value = userData;
       nama.value = userData.name;
 
-      // Only create File if photo URL is valid
       if (userData.photo.isNotEmpty) {
         imageFile.value = File(userData.photo);
       } else {
@@ -166,7 +166,6 @@ class ProfilController extends GetxController {
 
       if (croppedFile != null) {
         this.imageFile.value = File(croppedFile.path);
-        // Consider adding upload logic here
       }
     } catch (e) {
       log("Error cropping image: $e");
@@ -180,17 +179,7 @@ class ProfilController extends GetxController {
         status: 'logging_out'.tr,
         dismissOnTap: false,
       );
-
-      // // Optional: Call logout API if needed
-      // final token = LocalStorageService.getToken();
-      // if (token != null) {
-      //   await DioService.request(
-      //     "/auth/logout",
-      //     method: "POST",
-      //     token: token,
-      //   );
-      // }
-
+      CartController.to.clearCart();
       await LocalStorageService.deleteAuth();
       EasyLoading.dismiss();
       Get.offAllNamed(Routes.signInRoute);

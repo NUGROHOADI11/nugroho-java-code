@@ -16,7 +16,7 @@ class CartScreen extends StatelessWidget {
     return Scaffold(
       appBar: buildAppBar(),
       body: Obx(() {
-        if (controller.items.isEmpty) {
+        if (controller.cartItems.isEmpty) {
           return buildEmptyCart();
         }
         return Column(

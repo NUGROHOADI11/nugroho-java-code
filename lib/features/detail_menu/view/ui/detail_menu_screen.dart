@@ -220,9 +220,10 @@ class DetailMenuScreen extends StatelessWidget {
 
           if (qtyArg > 0) {
             final existingIndex =
-                cartController.items.indexWhere((e) => e.menuId == menuId);
+                cartController.cartItems.indexWhere((e) => e.menuId == menuId);
             if (existingIndex != -1) {
-              final updatedItem = cartController.items[existingIndex].copyWith(
+              final updatedItem =
+                  cartController.cartItems[existingIndex].copyWith(
                 jumlah: qty,
                 level: controller.selectedLevel.value,
                 topping: controller.selectedTopping,

@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:badges/badges.dart' as badges;
@@ -46,12 +47,20 @@ class HomeScreen extends StatelessWidget {
                 ),
                 BottomNavigationBarItem(
                   icon: badges.Badge(
-                      showBadge: orderControll.orders.isNotEmpty,
+                      showBadge: orderControll.displayedOngoing.isNotEmpty,
                       badgeContent: Text(
                         orderControll.getActiveOrderCount().toString(),
                         style:
                             const TextStyle(color: Colors.white, fontSize: 10),
                       ),
+                      badgeStyle: BadgeStyle(
+                      badgeColor: ColorStyle.primary,
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(
+                        color: ColorStyle.light, 
+                        width: 1, 
+                      ),
+                    ),
                       child: const Icon(Icons.notifications_sharp)),
                   label: 'Pesanan'.tr,
                 ),

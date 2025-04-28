@@ -192,12 +192,21 @@ class DioService extends GetxService {
         method: "GET", token: token);
   }
 
-  // create order
-  static Future<Map<String, dynamic>?> createOrder(
-      Map<String, dynamic> data) async {
+  static Future<Map<String, dynamic>?> createOrder(Map<String, dynamic> data) async {
+  try {
     String? token = LocalStorageService.getToken();
-    return await req("/order/add", method: "POST", data: data, token: token);
+    final response = await req("/order/add", method: "POST", data: data, token: token);
+    
+    if (response != null && response['status_code'] == 200) {
+      return response['data'];
+    } else {
+      throw Exception(response?['message'] ?? 'Failed to create order');
+    }
+  } catch (e) {
+    log('Order creation error: $e');
+    rethrow;
   }
+}
 
   // delete order
   static Future<Map<String, dynamic>?> deleteOrder(int orderId) async {

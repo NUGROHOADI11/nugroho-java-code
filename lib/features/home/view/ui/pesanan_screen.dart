@@ -1,5 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:nugroho_javacode/utils/extensions/int_extensions.dart';
 
@@ -21,7 +22,9 @@ class PesananScreen extends StatelessWidget {
       child: Scaffold(
         appBar: _buildAppBar(),
         body: Obx(() {
-          if (controller.isLoading.value && controller.orders.isEmpty) {
+          if (controller.isLoading.value &&
+              controller.displayedOngoing.isEmpty &&
+              controller.displayedHistory.isEmpty) {
             return const Center(
               child: SkeletonLoading(count: 3, width: 100.0, height: 50.0),
             );
@@ -31,21 +34,10 @@ class PesananScreen extends StatelessWidget {
             return Center(child: Text(controller.errorMessage.value));
           }
 
-          final ongoingOrders = _filterOrders(controller.orders, [
-            OrderStatus.inQueue,
-            OrderStatus.preparing,
-            OrderStatus.readyForPickup,
-          ]);
-
-          final historyOrders = _filterOrders(controller.orders, [
-            OrderStatus.completed,
-            OrderStatus.cancelled,
-          ]);
-
           return TabBarView(
             children: [
-              _buildOngoingOrdersTab(controller, ongoingOrders),
-              _buildHistoryOrdersTab(controller, historyOrders),
+              _buildOngoingOrdersTab(controller),
+              _buildHistoryOrdersTab(controller),
             ],
           );
         }),
@@ -84,18 +76,19 @@ class PesananScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildOngoingOrdersTab(
-      PesananController controller, List<Order> ongoingOrders) {
+  Widget _buildOngoingOrdersTab(PesananController controller) {
     return RefreshIndicator(
       onRefresh: () async {
         await controller.fetchOrders();
       },
-      child: _buildOrderList(ongoingOrders, controller),
+      child: Obx(() {
+        return _buildOrderList(controller.displayedOngoing, controller,
+            isOngoing: true);
+      }),
     );
   }
 
-  Widget _buildHistoryOrdersTab(
-      PesananController controller, List<Order> historyOrders) {
+  Widget _buildHistoryOrdersTab(PesananController controller) {
     return Column(
       children: [
         const SizedBox(height: 8),
@@ -106,13 +99,35 @@ class PesananScreen extends StatelessWidget {
               await controller.fetchOrders();
             },
             child: Obx(() {
-              var filteredOrders = _applyFilters(
-                historyOrders,
-                controller.selectedFilter.value,
-                controller.selectedDate.value,
-              );
+              var filteredOrders = controller.displayedHistory;
 
-              return _buildOrderList(filteredOrders, controller);
+              // Apply filter status
+              if (controller.selectedFilter.value != 'Semua') {
+                final selectedStatus =
+                    int.tryParse(controller.selectedFilter.value);
+                if (selectedStatus != null) {
+                  filteredOrders = filteredOrders
+                      .where((order) => order.status.value == selectedStatus)
+                      .toList()
+                      .obs;
+                }
+              }
+
+              // Apply filter date
+              if (controller.selectedDate.value != null) {
+                filteredOrders = filteredOrders
+                    .where((order) =>
+                        order.date.year ==
+                            controller.selectedDate.value!.year &&
+                        order.date.month ==
+                            controller.selectedDate.value!.month &&
+                        order.date.day == controller.selectedDate.value!.day)
+                    .toList()
+                    .obs;
+              }
+
+              return _buildOrderList(filteredOrders, controller,
+                  isOngoing: false);
             }),
           ),
         ),
@@ -221,7 +236,8 @@ class PesananScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildOrderList(List<Order> orders, PesananController controller) {
+  Widget _buildOrderList(List<Order> orders, PesananController controller,
+      {required bool isOngoing}) {
     if (orders.isEmpty) {
       return const Center(
         child: Text(
@@ -231,23 +247,59 @@ class PesananScreen extends StatelessWidget {
       );
     }
 
-    return ListView.builder(
-      itemCount: orders.length + (controller.hasMore.value ? 1 : 0),
-      itemBuilder: (context, index) {
-        if (index == orders.length) {
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: controller.isLoadingMore.value
-                  ? const SkeletonLoading()
-                  : const SizedBox(),
-            ),
-          );
+    return NotificationListener<ScrollNotification>(
+      onNotification: (ScrollNotification scrollInfo) {
+        if (!controller.isLoadingMoreOngoing.value &&
+            !controller.isLoadingMoreHistory.value &&
+            scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
+          if (isOngoing) {
+            controller.loadMoreOngoing();
+          } else {
+            controller.loadMoreHistory();
+          }
         }
-
-        final order = orders[index];
-        return _buildOrderCard(order, controller);
+        return false;
       },
+      child: ListView.builder(
+        itemCount: orders.length + 1,
+        itemBuilder: (context, index) {
+          if (index < orders.length) {
+            final order = orders[index];
+            return _buildOrderCard(order, controller);
+          } else {
+            return Obx(() {
+              bool isLoading = isOngoing
+                  ? controller.isLoadingMoreOngoing.value
+                  : controller.isLoadingMoreHistory.value;
+
+              if (isLoading) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10.h),
+                  child: const Center(child: CircularProgressIndicator.adaptive()),
+                );
+              } else {
+                return const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Center(
+                    child: Column(
+                      children: [
+                        Text(
+                          'Load More',
+                          style: TextStyle(fontSize: 16, color: Colors.grey),
+                        ),
+                        Icon(
+                          Icons.keyboard_arrow_down,
+                          color: Colors.grey,
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
+            });
+          }
+        },
+      ),
     );
   }
 
@@ -270,8 +322,10 @@ class PesananScreen extends StatelessWidget {
             width: 60,
             height: 60,
             fit: BoxFit.contain,
-            errorBuilder: (context, error, stackTrace) =>
-                const Icon(Icons.fastfood),
+            errorBuilder: (context, error, stackTrace) => const Icon(
+              Icons.fastfood,
+              size: 60,
+            ),
           ),
         ),
         title: Column(
@@ -314,36 +368,13 @@ class PesananScreen extends StatelessWidget {
             ),
           ],
         ),
-        onTap: () {
-          if (order.status.value < 4) {
-            Get.toNamed(Routes.detailOrderRoute, arguments: {'id': order.id});
-          }
-        },
+        onTap: (order.status.value < 3)
+            ? () {
+                Get.toNamed(Routes.detailOrderRoute,
+                    arguments: {'id': order.id});
+              }
+            : null,
       ),
     );
-  }
-
-  List<Order> _filterOrders(List<Order> orders, List<OrderStatus> statuses) {
-    return orders.where((order) => statuses.contains(order.status)).toList();
-  }
-
-  List<Order> _applyFilters(
-      List<Order> orders, String selectedFilter, DateTime? selectedDate) {
-    var filteredOrders = selectedFilter == 'Semua'
-        ? orders
-        : orders
-            .where((order) => order.status.value.toString() == selectedFilter)
-            .toList();
-
-    if (selectedDate != null) {
-      filteredOrders = filteredOrders.where((order) {
-        final orderDate = order.date;
-        return orderDate.year == selectedDate.year &&
-            orderDate.month == selectedDate.month &&
-            orderDate.day == selectedDate.day;
-      }).toList();
-    }
-
-    return filteredOrders;
   }
 }

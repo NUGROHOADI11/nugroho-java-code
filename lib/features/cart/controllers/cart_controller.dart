@@ -6,7 +6,9 @@ import 'package:hive/hive.dart';
 import 'package:logger/logger.dart';
 
 import '../../../utils/services/dio_service.dart';
+import '../../../utils/services/hive_service.dart';
 import '../../detail_menu/models/detail_menu_model.dart';
+import '../../home/controllers/pesanan_controller.dart';
 import '../models/cart_model.dart';
 
 class CartController extends GetxController {
@@ -15,7 +17,7 @@ class CartController extends GetxController {
   final logger = Logger();
   late final Box<CartItemModel> _cartBox;
 
-  final items = <CartItemModel>[].obs;
+  final cartItems = <CartItemModel>[].obs;
   final menuDetails = <int, MenuDetailModel>{};
 
   final menuDetail = Rxn<MenuDetailModel>();
@@ -36,14 +38,14 @@ class CartController extends GetxController {
     fetchDiscounts();
   }
 
-  // Load & Update Cart
-  void loadCartItems() => items.assignAll(_cartBox.values.toList());
+  // Cart Logic
+  void loadCartItems() => cartItems.assignAll(_cartBox.values.toList());
 
   void addItem(CartItemModel newItem) {
-    final index = items.indexWhere((item) => item.isSameItem(newItem));
+    final index = cartItems.indexWhere((item) => item.isSameItem(newItem));
     if (index != -1) {
-      final updated = items[index].copyWith(
-        jumlah: items[index].jumlah + newItem.jumlah,
+      final updated = cartItems[index].copyWith(
+        jumlah: cartItems[index].jumlah + newItem.jumlah,
       );
       updateItem(index, updated);
     } else {
@@ -68,12 +70,63 @@ class CartController extends GetxController {
 
   void clearCart() {
     _cartBox.clear();
-    loadCartItems();
+    cartItems.clear();
+    selectedVoucherId.value = -1;
+    selectedVoucherValue.value = 0;
+    update();
+  }
+
+  Future<Map<String, dynamic>> prepareOrderData() async {
+    final int? user = LocalStorageService.getUserData()["id_user"];
+    final voucher = selectedVoucherId.value;
+
+    return {
+      "order": {
+        "id_user": user ?? 0,
+        "id_voucher": voucher != -1 ? voucher : null,
+        "diskon": voucher != -1 ? null : calculateDiscount(),
+        "potongan": selectedVoucherValue.value,
+        "total_bayar": totalPrice,
+      },
+      "menu": cartItems.map((item) {
+        return {
+          "id_menu": item.menuId,
+          "harga": item.harga,
+          "level": item.level,
+          "topping": item.topping ?? [],
+          "jumlah": item.jumlah,
+          "catatan": item.notes ?? ""
+        };
+      }).toList(),
+    };
+  }
+
+  Future<Map<String, dynamic>?> createOrder() async {
+    try {
+      final orderData = await prepareOrderData();
+      final response = await DioService.createOrder(orderData);
+
+      if (response != null) {
+        clearCart();
+        PesananController.to.update();
+        await PesananController.to.fetchOrders();
+        return response;
+      }
+      return null;
+    } catch (e) {
+      logger.d('Order creation error: $e');
+      Get.snackbar(
+        "Error".tr,
+        e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return null;
+    }
   }
 
   // Menu Details
   void preloadMenuDetails() {
-    for (final item in items) {
+    for (final item in cartItems) {
       if (!menuDetails.containsKey(item.menuId)) {
         fetchDetail(item.menuId);
       }
@@ -153,15 +206,16 @@ class CartController extends GetxController {
   }
 
   // Calculate
-  int get subTotalPrice => items.fold(0, (sum, item) => sum + item.totalPrice);
+  int get subTotalPrice =>
+      cartItems.fold(0, (sum, item) => sum + item.totalPrice);
 
   int get totalLevelPrice =>
-      items.fold(0, (sum, item) => sum + (item.hargaLevel ?? 0));
+      cartItems.fold(0, (sum, item) => sum + (item.hargaLevel ?? 0));
 
   int get totalToppingPrice =>
-      items.fold(0, (sum, item) => sum + (item.hargaTopping ?? 0));
+      cartItems.fold(0, (sum, item) => sum + (item.hargaTopping ?? 0));
 
-  int get totalQuantity => items.fold(0, (sum, item) => sum + item.jumlah);
+  int get totalQuantity => cartItems.fold(0, (sum, item) => sum + item.jumlah);
 
   int get totalPrice {
     final discount =
@@ -172,14 +226,14 @@ class CartController extends GetxController {
   // Helper Getters
   bool get hasSelectedVoucher => selectedVoucherId.value != -1;
 
-  bool isItemInCart(int id) => items.any((item) => item.menuId == id);
+  bool isItemInCart(int id) => cartItems.any((item) => item.menuId == id);
 
-  int getQuantity(int id) => items
+  int getQuantity(int id) => cartItems
       .where((item) => item.menuId == id)
       .fold(0, (sum, item) => sum + item.jumlah);
 
   CartItemModel? getItem(int id) =>
-      items.firstWhereOrNull((item) => item.menuId == id);
+      cartItems.firstWhereOrNull((item) => item.menuId == id);
 
   // Utility
   void _setLoading(bool value) => isLoading.value = value;
