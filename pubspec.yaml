@@ -83,6 +83,7 @@ dependencies:
   shimmer: ^3.0.0
   dropdown_button2: ^2.3.9
   badges: ^3.1.2
+  qiscus_chat_sdk: ^2.2.1
 
 dev_dependencies:
   flutter_test:

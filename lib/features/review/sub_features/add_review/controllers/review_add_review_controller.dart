@@ -1,24 +1,22 @@
-import 'dart:developer';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:nugroho_javacode/features/review/controllers/review_controller.dart';
 import 'package:nugroho_javacode/shared/widgets/image_picker_dialog.dart';
 
-import '../../../../../shared/styles/color_style.dart';
-
 class ReviewAddReviewController extends GetxController {
-  static ReviewAddReviewController get to => Get.find();
+  static ReviewAddReviewController get to => Get.put(ReviewAddReviewController());
 
-  var selectedRating = 5.obs;
-  var selectedCategories = <String>[].obs;
-  final reviewController = TextEditingController();
-  final Rx<File?> _imageFile = Rx<File?>(null);
-  File? get imageFile => _imageFile.value;
+  final RxInt selectedRating = 5.obs;
+  final RxList<String> selectedCategories = <String>[].obs;
+  final TextEditingController reviewController = TextEditingController();
+  final Rx<File?> imageFile = Rx<File?>(null);
+  final RxString imagePath = RxString('');
+  final RxString errorMessage = ''.obs;
 
-  final categories = [
+  final List<String> reviewCategories = [
     'Harga',
     'Rasa',
     'Penyajian makanan',
@@ -28,18 +26,18 @@ class ReviewAddReviewController extends GetxController {
 
   String getRatingText(int rating) {
     switch (rating) {
-      case 5:
-        return 'Sempurna';
-      case 4:
-        return 'Hampir Sempurna';
-      case 3:
-        return 'Cukup Baik';
-      case 2:
-        return 'Kurang Baik';
       case 1:
         return 'Buruk';
+      case 2:
+        return 'Kurang Baik';
+      case 3:
+        return 'Cukup Baik';
+      case 4:
+        return 'Hampir Sempurna';
+      case 5:
+        return 'Sempurna';
       default:
-        return '';
+        return 'Pilih Rating';
     }
   }
 
@@ -49,15 +47,6 @@ class ReviewAddReviewController extends GetxController {
     } else {
       selectedCategories.add(category);
     }
-  }
-
-  void submitReview() {
-    // final rating = selectedRating.value;
-    // final categories = selectedCategories;
-    // final comment = reviewController.text;
-    // print("Rating: $rating");
-    // print("Kategori: $categories");
-    // print("Review: $comment");
   }
 
   Future<void> pickImage() async {
@@ -74,37 +63,83 @@ class ReviewAddReviewController extends GetxController {
         source: imageSource,
         maxWidth: 1400,
         maxHeight: 1400,
-        imageQuality: 100,
+        imageQuality: 85,
       );
 
       if (pickedFile != null) {
-        _imageFile.value = File(pickedFile.path);
         final croppedFile = await ImageCropper().cropImage(
-          sourcePath: _imageFile.value!.path,
+          sourcePath: pickedFile.path,
           aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
+          compressQuality: 85,
           uiSettings: [
             AndroidUiSettings(
-              toolbarTitle: 'Cropper'.tr,
-              toolbarColor: ColorStyle.primary,
+              toolbarTitle: 'Edit Gambar',
+              toolbarColor: Get.theme.primaryColor,
               toolbarWidgetColor: Colors.white,
               initAspectRatio: CropAspectRatioPreset.square,
               lockAspectRatio: true,
+            ),
+            IOSUiSettings(
+              title: 'Edit Gambar',
+              aspectRatioLockEnabled: true,
             ),
           ],
         );
 
         if (croppedFile != null) {
-          _imageFile.value = File(croppedFile.path);
+          imageFile.value = File(croppedFile.path);
+          imagePath.value = croppedFile.path;
         }
       }
     } catch (e) {
-      log("Error picking image: $e");
-      Get.snackbar("Error", "Gagal mengambil gambar $e");
+      errorMessage.value = 'Gagal mengambil gambar: ${e.toString()}';
+      Get.snackbar('Error', errorMessage.value);
     }
   }
 
   void removeImage() {
-    _imageFile.value = null;
+    imageFile.value = null;
+    imagePath.value = '';
+  }
+
+  Future<void> submitReview() async {
+    try {
+      if (selectedRating.value == 0) {
+        throw 'Harap berikan rating';
+      }
+
+      if (selectedCategories.isEmpty) {
+        throw 'Harap pilih minimal satu kategori';
+      }
+
+      if (reviewController.text.isEmpty) {
+        throw 'Harap tulis review Anda';
+      }
+
+      final reviewData = {
+        'category': selectedCategories.join(', '),
+        'rating': selectedRating.value,
+        'desc': reviewController.text,
+        'imagePath': imagePath.value,
+        'createdAt': DateTime.now(),
+      };
+
+      await ReviewController.to.addReview(reviewData);
+      resetForm();
+      Get.back(result: true);
+      Get.snackbar('Success', 'Review berhasil ditambahkan');
+    } catch (e) {
+      errorMessage.value = e.toString();
+      Get.snackbar('Error', errorMessage.value);
+    }
+  }
+
+  void resetForm() {
+    selectedRating.value = 0;
+    selectedCategories.clear();
+    reviewController.clear();
+    removeImage();
+    errorMessage.value = '';
   }
 
   @override

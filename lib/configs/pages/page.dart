@@ -15,6 +15,8 @@ import 'package:nugroho_javacode/features/voucher/bindings/voucher_binding.dart'
 
 import '../../features/cart/bindings/cart_binding.dart';
 import '../../features/cart/view/ui/cart_screen.dart';
+import '../../features/chat_review/bindings/chat_review_binding.dart';
+import '../../features/chat_review/view/ui/chat_review_screen.dart';
 import '../../features/compass/bindings/compass_binding.dart';
 import '../../features/compass/view/ui/compass_screen.dart';
 import '../../features/detail_menu/view/ui/detail_menu_screen.dart';
@@ -103,6 +105,10 @@ abstract class Pages {
       page: () => AddReviewScreen(),
       // binding: AddReviewBinding()
     ),
+    GetPage(
+        name: Routes.chatReviewRoute,
+        page: () => ChatReviewScreen(),
+        binding: ChatReviewBinding()),
     GetPage(
         name: Routes.voucherRoute,
         page: () => VoucherScreen(),

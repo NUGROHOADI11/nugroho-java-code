@@ -20,4 +20,5 @@ abstract class Routes {
   static const String voucherRoute = '/voucher';
   static const String voucherDetailRoute = '/voucher_detail';
 static const String detailOrderRoute = '/detail_order';
+static const String chatReviewRoute = '/chat_review';
 }

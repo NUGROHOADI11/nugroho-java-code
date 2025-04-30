@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-
 import '../../../../../../shared/styles/color_style.dart';
 import '../../controllers/review_add_review_controller.dart';
 
@@ -48,13 +47,13 @@ class AddReviewScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Obx(() {
-                if (controller.imageFile != null) {
+                if (controller.imageFile.value != null) {
                   return Column(
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(12),
                         child: Image.file(
-                          controller.imageFile!,
+                          controller.imageFile.value!,
                           width: double.infinity,
                           height: 200.h,
                           fit: BoxFit.cover,
@@ -64,9 +63,7 @@ class AddReviewScreen extends StatelessWidget {
                       Align(
                         alignment: Alignment.centerRight,
                         child: IconButton(
-                          onPressed: () {
-                            controller.removeImage();
-                          },
+                          onPressed: controller.removeImage,
                           icon: Icon(
                             Icons.delete,
                             color: Colors.red,
@@ -93,6 +90,7 @@ class AddReviewScreen extends StatelessWidget {
                   );
                 }
               }),
+              const SizedBox(height: 16),
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -121,18 +119,16 @@ class AddReviewScreen extends StatelessWidget {
                                       index + 1,
                                   child: Icon(
                                     Icons.star,
-                                    color:
-                                        index < controller.selectedRating.value
-                                            ? Colors.amber
-                                            : Colors.grey,
+                                    color: index < controller.selectedRating.value
+                                        ? Colors.amber
+                                        : Colors.grey,
                                     size: 32.sp,
                                   ),
                                 );
                               }),
                             ),
                             Text(
-                              controller.getRatingText(
-                                  controller.selectedRating.value),
+                              controller.getRatingText(controller.selectedRating.value),
                               style: TextStyle(
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w500,
@@ -165,26 +161,21 @@ class AddReviewScreen extends StatelessWidget {
                     Obx(() => Wrap(
                           spacing: 8,
                           runSpacing: 8,
-                          children: controller.categories.map((label) {
-                            final isSelected =
-                                controller.selectedCategories.contains(label);
+                          children: controller.reviewCategories.map((label) {
+                            final isSelected = controller.selectedCategories.contains(label);
                             return ChoiceChip(
                               label: Text(label),
                               selected: isSelected,
-                              selectedColor: Colors.cyan[50],
+                              selectedColor: Colors.white,
                               labelStyle: TextStyle(
-                                color:
-                                    isSelected ? Colors.cyan : Colors.black87,
+                                color: isSelected ? ColorStyle.primary : Colors.black87,
                                 fontWeight: FontWeight.w500,
                               ),
                               backgroundColor: Colors.grey[200],
                               side: BorderSide(
-                                color: isSelected
-                                    ? Colors.cyan
-                                    : Colors.transparent,
+                                color: isSelected ? ColorStyle.primary : Colors.transparent,
                               ),
-                              onSelected: (_) =>
-                                  controller.toggleCategory(label),
+                              onSelected: (_) => controller.toggleCategory(label),
                             );
                           }).toList(),
                         )),
@@ -242,9 +233,7 @@ class AddReviewScreen extends StatelessWidget {
                             border: Border.all(color: ColorStyle.primary),
                           ),
                           child: IconButton(
-                            onPressed: () {
-                              controller.pickImage();
-                            },
+                            onPressed: controller.pickImage,
                             icon: Icon(
                               Icons.add_a_photo_outlined,
                               color: ColorStyle.primary,

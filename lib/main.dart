@@ -12,6 +12,7 @@ import 'package:nugroho_javacode/shared/bindings/global_bindings/global_binding.
 import 'configs/pages/page.dart';
 import 'configs/themes/theme.dart';
 import 'features/cart/models/cart_model.dart';
+import 'features/review/models/review_model.dart';
 import 'utils/services/hive_service.dart';
 import 'utils/services/sentry_services.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -23,6 +24,7 @@ void main() async {
 
   await Hive.initFlutter();
   Hive.registerAdapter(CartItemModelAdapter());
+  Hive.registerAdapter(ReviewModelAdapter());
   await Get.putAsync(() async {
     final service = LocalStorageService();
     return await service.init();
@@ -34,6 +36,8 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  // await _initServices();
+
   await SentryFlutter.init(
     (options) {
       options.dsn =
@@ -44,6 +48,15 @@ void main() async {
     appRunner: () => runApp(MyApp()),
   );
 }
+
+// Future<void> _initServices() async {
+//   try {
+//     await Get.putAsync(() => QiscusService().initiateQiscus());
+//     log('All services started...');
+//   } on Exception catch (e) {
+//     log('Service failed $e');
+//   }
+// }
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
