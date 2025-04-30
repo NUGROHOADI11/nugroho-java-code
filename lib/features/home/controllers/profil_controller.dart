@@ -22,8 +22,15 @@ class ProfilController extends GetxController {
   // User data
   final int? idUser = LocalStorageService.getUserData()["id_user"];
   final Rx<UserDetail?> user = Rx<UserDetail?>(null);
-  final RxString nama = RxString('');
   final Rx<File?> imageFile = Rx<File?>(null);
+  final RxString imageUrl = RxString('');
+  final RxString nama = RxString('');
+  final RxString birthDate = RxString('');
+  final RxString phoneNumber = RxString('');
+  final RxString email = RxString('');
+  final RxString currentPin = RxString('');
+  final RxBool isPinVisible = false.obs;
+
 
   // Language preference
   final String? language = LocalStorageService.getLanguagePreference();
@@ -62,6 +69,10 @@ class ProfilController extends GetxController {
       final userData = await DioService.getUserDetail(idUser!);
       user.value = userData;
       nama.value = userData.name;
+      birthDate.value = userData.birthDate;
+      phoneNumber.value = userData.phone;
+      email.value = userData.email;
+      currentPin.value = userData.pin;
 
       if (userData.photo.isNotEmpty) {
         imageFile.value = File(userData.photo);
@@ -84,6 +95,83 @@ class ProfilController extends GetxController {
   void updateNama(String newNama) {
     if (newNama.trim().isNotEmpty) {
       nama.value = newNama.trim();
+    }
+  }
+
+  void updateBirthDate(String newDate) {
+    if (newDate.isNotEmpty) {
+      birthDate.value = newDate;
+    }
+  }
+
+  bool isValidPhone(String phone) {
+    final phoneRegex = RegExp(r'^08[0-9]{8,11}$');
+    return phoneRegex.hasMatch(phone);
+  }
+
+  bool updatePhoneNumber(String newPhone) {
+    final trimmedPhone = newPhone.trim();
+    if (trimmedPhone.isNotEmpty && isValidPhone(trimmedPhone)) {
+      phoneNumber.value = trimmedPhone;
+      return true;
+    } else {
+      Get.snackbar(
+        'Invalid Phone Number'.tr,
+        'Please enter a valid phone number'.tr,
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return false;
+    }
+  }
+
+  bool isValidEmail(String email) {
+    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+    return emailRegex.hasMatch(email);
+  }
+
+  bool updateEmail(String newEmail) {
+    final trimmedEmail = newEmail.trim();
+    if (trimmedEmail.isNotEmpty && isValidEmail(trimmedEmail)) {
+      email.value = trimmedEmail;
+      return true;
+    } else {
+      Get.snackbar(
+        'Invalid Email'.tr,
+        'Please enter a valid email address'.tr,
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return false;
+    }
+  }
+
+  Future<bool> verifyOldPin(String enteredPin) async {
+    return enteredPin == currentPin.value;
+  }
+
+  Future<void> updatePin(String currentPin, String newPin) async {
+    try {
+      EasyLoading.show(status: 'Verifying...'.tr);
+
+      final isVerified = await verifyOldPin(currentPin);
+      if (!isVerified) {
+        EasyLoading.showError('Old PIN is incorrect'.tr);
+        return;
+      }
+
+      if (newPin.length != 6) {
+        EasyLoading.showError('PIN must be 6 digits'.tr);
+        return;
+      }
+
+      EasyLoading.showSuccess('PIN updated successfully'.tr);
+      this.currentPin.value = newPin;
+    } catch (e) {
+      EasyLoading.showError('Failed to update PIN'.tr);
+      log("Error updating PIN: $e");
     }
   }
 
@@ -186,7 +274,6 @@ class ProfilController extends GetxController {
     } catch (e) {
       log("Logout error: $e");
       EasyLoading.dismiss();
-      // Even if logout fails, we should still clear local data
       await LocalStorageService.deleteAuth();
       Get.offAllNamed(Routes.signInRoute);
     }

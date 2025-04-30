@@ -110,7 +110,7 @@ class ChatReviewScreen extends StatelessWidget {
                             message: review.category,
                             child: Text(
                               review.category,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: ColorStyle.primary,
                               ),
