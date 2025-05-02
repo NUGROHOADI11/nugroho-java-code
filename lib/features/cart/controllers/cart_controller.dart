@@ -4,8 +4,10 @@ import 'dart:math' as math;
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:logger/logger.dart';
+import 'package:nugroho_javacode/features/detail_menu/repositories/detail_menu_repository.dart';
+import 'package:nugroho_javacode/features/detail_order/repositories/detail_order_repository.dart';
+import 'package:nugroho_javacode/features/detail_promo/repositories/detail_promo_repository.dart';
 
-import '../../../utils/services/dio_service.dart';
 import '../../../utils/services/hive_service.dart';
 import '../../detail_menu/models/detail_menu_model.dart';
 import '../../home/controllers/pesanan_controller.dart';
@@ -104,7 +106,7 @@ class CartController extends GetxController {
   Future<Map<String, dynamic>?> createOrder() async {
     try {
       final orderData = await prepareOrderData();
-      final response = await DioService.createOrder(orderData);
+      final response = await DetailOrderRepository.createOrder(orderData);
 
       if (response != null) {
         clearCart();
@@ -136,7 +138,7 @@ class CartController extends GetxController {
   Future<void> fetchDetail(int id) async {
     _setLoading(true);
     try {
-      final response = await DioService.getMenuById(id);
+      final response = await DetailMenuRepository.getMenuById(id);
       _handleMenuDetailResponse(id, response);
       logger.d(response);
     } catch (e) {
@@ -165,7 +167,7 @@ class CartController extends GetxController {
   Future<void> fetchDiscounts() async {
     _setLoading(true);
     try {
-      final response = await DioService.getPromos(type: 'diskon');
+      final response = await DetailPromoRepository.getPromos(type: 'diskon');
       if (response != null && response['status_code'] == 200) {
         discounts.assignAll(response['data'] ?? []);
       } else {

@@ -4,114 +4,164 @@ const Map<String, String> enUS = {
   // ===== Navigation & Common UI Labels =====
   'Beranda': 'Home',
   'Ganti Bahasa': 'Change Language',
+  'Menu': 'Menu',
+  'Oke': 'Okay',
   'Profil': 'Profile',
   'Pesanan': 'Orders',
   'Ubah': 'Change',
-  'Menu': 'Menu',
-  'Oke': 'Okay',
 
   // ===== Authentication & Login =====
-  'Masuk untuk melanjutkan!': 'Sign in to continue!',
   'Alamat Email': 'Email Address',
-  'Masukkan Email anda': 'Enter your email',
+  'atau': 'or',
   'Kata Sandi': 'Password',
-  'Masukkan kata sandi anda': 'Enter your password',
   'Lupa Password?': 'Forgot Password?',
   'Masuk': 'Sign In',
+  'Masuk untuk melanjutkan!': 'Sign in to continue!',
   'Masuk menggunakan Google': 'Sign in with Google',
   'Masuk menggunakan Apple': 'Sign in with Apple',
-  'atau': 'or',
+  'Masukkan Email anda': 'Enter your email',
+  'Masukkan kata sandi anda': 'Enter your password',
 
-  // ===== Validation & Error Messages =====
+  // ===== Validation & Errors =====
   'Email is required': 'Email is required',
   'Password is required': 'Password is required',
   'Email atau Password tidak boleh kosong': 'Email or Password cannot be empty',
+  'Valid Date': 'Valid Date',
   'Error': 'Error',
   'Login gagal.': 'Login failed.',
   'Terjadi kesalahan': 'An error occurred',
   'Coba lagi': 'Try again',
   'Retry': 'Retry',
-
-  // ===== Loading State =====
   'Sedang Diproses...': 'Processing...',
 
-  // ===== Forgot Password / Reset Password =====
-  'Masukkan alamat email untuk mengubah password anda':
-      'Enter your email address to reset your password',
-  'Ubah Password': 'Reset Password',
-  'Reset password link sent': 'Reset password link sent',
+  // ===== Forgot Password / Reset =====
+  'Back to Login': 'Back to Login',
   'Check your email for reset instructions':
       'Check your email for reset instructions',
-  'Back to Login': 'Back to Login',
+  'Masukkan alamat email untuk mengubah password anda':
+      'Enter your email address to reset your password',
+  'Reset password link sent': 'Reset password link sent',
+  'Ubah Password': 'Reset Password',
 
   // ===== OTP Verification =====
+  'Kode OTP': 'OTP Code',
+  'Kode OTP harus 6 digit': 'OTP code must be 6 digits',
+  'Kode OTP wajib diisi': 'OTP code is required',
+  'Kode tidak valid': 'Invalid code',
+  'Kirim ulang kode': 'Resend code',
   'Masukkan kode otp yang telah dikirimkan ke email':
       'Enter the OTP code that has been sent to your email',
-  'Kode OTP': 'OTP Code',
   'Masukkan kode OTP': 'Enter OTP code',
   'Verifikasi': 'Verify',
-  'Kirim ulang kode': 'Resend code',
-  'Kode tidak valid': 'Invalid code',
-  'Kode OTP wajib diisi': 'OTP code is required',
-  'Kode OTP harus 6 digit': 'OTP code must be 6 digits',
 
   // ===== Profile & Account =====
-  'Verifikasi KTP mu sekarang!': 'Verify your ID card now!',
-  'Info Akun': 'Account Info',
-  'Nama': 'Name',
-  'Tanggal Lahir': 'Birth Date',
-  'No.Telepon': 'Phone Number',
-  'Email': 'Email',
-  'Ubah PIN': 'Change PIN',
   'Bahasa Indonesia': 'Indonesian',
-  'English': 'English',
-  'Nilai Sekarang': 'Rate Now',
-  'Info Lainnya': 'Other Info',
   'Device Info': 'Device Info',
   'Device Version': 'Device Version',
-  'Log Out': 'Log Out',
+  'Email': 'Email',
+  'English': 'English',
   'Indonesia': 'Indonesian',
   'Inggris': 'English',
+  'Info Akun': 'Account Info',
+  'Info Lainnya': 'Other Info',
+  'Log Out': 'Log Out',
+  'Nama': 'Name',
+  'Nilai Sekarang': 'Rate Now',
+  'No.Telepon': 'Phone Number',
+  'Rate Now': 'Rate Now',
+  'Tanggal Lahir': 'Birth Date',
+  'Ubah PIN': 'Change PIN',
+  'Verifikasi KTP mu sekarang!': 'Verify your ID card now!',
 
-  // ===== Home / Dashboard Content =====
-  'Selamat datang di Venturo!': 'Welcome to Venturo!',
-  'Pencarian': 'Search',
-  'Promo yang Tersedia': 'Available Promotions',
-  'Semua Menu': 'All Menu',
-  'Makanan': 'Food',
-  'Minuman': 'Drinks',
-  'Snack': 'Snacks',
-  'Lainnya': 'Others',
-  'Tidak ada menu tersedia': 'No menu available',
-  'Tidak ada semua tersedia': 'No items available',
-  'Tidak ada makanan tersedia': 'No food available',
-  'Tidak ada minuman tersedia': 'No drinks available',
-  'Tidak ada snack tersedia': 'No snacks available',
-
-  // ===== Order Page =====
-  'Sedang Berjalan': 'Ongoing',
+  // ===== Orders =====
+  'Diskon': 'Discount',
+  'Info Diskon': 'Discount Info',
+  'Pesanan Sedang Disiapkan': 'Your Order is Being Prepared',
   'Riwayat': 'History',
-  'Tanggal': 'Date',
+  'Sedang Berjalan': 'Ongoing',
   'Status': 'Status',
+  'Tanggal': 'Date',
   'Total': 'Total',
   'Verifikasi Pesanan': 'Verify Order',
-  'Finger Print': 'Fingerprint',
-  'Verifikasi Menggunakan PIN': 'Verify with PIN',
-  'Masukan kode PIN': 'Enter your PIN',
-  'PIN salah, coba lagi.': 'Incorrect PIN, please try again.',
-  'Pesanan Sedang Disiapkan': 'Your Order is Being Prepared',
   'Kamu dapat melacak pesananmu di fitur Pesanan':
       'You can track your order in the Orders section.',
 
-  // ===== Checkout & Payment =====
-  'Diskon': 'Discount',
-  'Info Diskon': 'Discount Info',
-  'Keranjang': 'Cart',
-  'Tambahkan Catatan': 'Add Note',
-  'Total Pesanan': 'Order Total',
+  // ===== Cart & Checkout =====
+  'Buat Catatan': 'Create Note',
+  'Contoh: Tidak pedas': 'Example: Not spicy',
   'Diskon 20%': 'Discount 20%',
-  'Pilih Voucher': 'Select Voucher',
+  'Keranjang': 'Cart',
+  'Keranjang kosong': 'Cart is empty',
+  'Makanan': 'Food',
+  'Minuman': 'Drinks',
+  'Pakai Voucher': 'Use Voucher',
+  'Pay Later': 'Pay Later',
   'Pembayaran': 'Payment',
-  'Total Pembayaran': 'Total Payment',
   'Pesan Sekarang': 'Order Now',
+  'Pilih Level': 'Select Level',
+  'Pilih Topping': 'Select Topping',
+  'Pilih Voucher': 'Select Voucher',
+  'Tambahkan Catatan': 'Add Note',
+  'Tambahkan Ke Pesanan': 'Add to Order',
+  'Total Pembayaran': 'Total Payment',
+  'Total Pesanan': 'Order Total',
+  'Update Pesanan': 'Update Order',
+
+  // ===== Admin Feedback & Messaging =====
+  'Admin': 'Admin',
+  'Pesanan ditambahkan': 'Order added',
+  'Pesanan diperbarui': 'Order updated',
+  'Sukses': 'Success',
+  'Tulis Pesan ...': 'Write a message ...',
+
+  // ===== PIN & Fingerprint Verification =====
+  'Finger Print': 'Fingerprint',
+  'Masukan kode PIN': 'Enter your PIN',
+  'PIN salah, coba lagi.': 'Incorrect PIN, please try again.',
+  'Verifikasi Menggunakan PIN': 'Verify with PIN',
+
+  // ===== Admin Review Responses =====
+  'Kami menyesal atas pengalaman yang tidak memuaskan. Tim kami akan melakukan evaluasi internal.':
+      'We are sorry for the unsatisfactory experience. Our team will conduct an internal evaluation.',
+  'Kami sangat menghargai umpan balik Anda. Ini akan membantu kami meningkatkan layanan.':
+      'We truly appreciate your feedback. It will help us improve our service.',
+  'Laporan Anda telah kami terima dan sedang dalam proses pengecekan.':
+      'We have received your report and are currently reviewing it.',
+  'Masukan Anda sangat berharga bagi kami. Kami akan berusaha lebih baik lagi ke depannya.':
+      'Your feedback is very valuable to us. We will strive to do better in the future.',
+  'Mohon maaf atas ketidaknyamanan yang terjadi. Tim kami sedang menangani masalah ini.':
+      'We apologize for the inconvenience. Our team is currently handling the issue.',
+  'Terima kasih atas masukan Anda. Kami akan segera menindaklanjuti keluhan ini.':
+      'Thank you for your feedback. We will follow up on this issue promptly.',
+  'Terima kasih telah meluangkan waktu untuk memberikan ulasan. Kami akan memperbaiki kekurangan ini.':
+      'Thank you for taking the time to review us. We will improve our shortcomings.',
+
+  // ===== Order Status =====
+  'Order accepted': 'Order accepted',
+  'Order completed': 'Order completed',
+  'Please take your order': 'Please take your order',
+
+  // ===== Connectivity =====
+  'Masih tidak ada koneksi, coba lagi nanti.':
+      'Still no connection, please try again later.',
+  'Tidak Ada Koneksi': 'No Connection',
+
+  // ===== Months =====
+  'Agustus': 'August',
+  'April': 'April',
+  'Desember': 'December',
+  'Februari': 'February',
+  'Januari': 'January',
+  'Juli': 'July',
+  'Juni': 'June',
+  'Maret': 'March',
+  'Mei': 'May',
+  'November': 'November',
+  'Oktober': 'October',
+  'September': 'September',
+
+  // ===== Voucher Note =====
+  'Penggunaan voucher tidak dapat digabung dengan':
+      'Voucher usage cannot be combined with',
+  'discount employee reward program': 'discount employee reward program',
 };

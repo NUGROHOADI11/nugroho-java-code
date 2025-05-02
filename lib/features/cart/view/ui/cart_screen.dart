@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../../shared/widgets/app_bar.dart';
 import '../../controllers/cart_controller.dart';
-import '../components/appbar.dart';
 import '../components/cart_item.dart';
 import '../components/empty_cart.dart';
 import '../components/summary.dart';
@@ -14,7 +14,16 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(),
+      appBar: CustomAppBar(
+        title: 'Cart'.tr,
+        titleIcon: Icons.shopping_cart,
+        // action: IconButton(
+        //     onPressed: controller.clearCart,
+        //     icon: const Icon(
+        //       Icons.delete,
+        //       color: ColorStyle.primary,
+        //     )),
+      ),
       body: Obx(() {
         if (controller.cartItems.isEmpty) {
           return buildEmptyCart();

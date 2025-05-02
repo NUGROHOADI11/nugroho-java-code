@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'package:dio/dio.dart' as dio;
 import 'package:get/get.dart';
 import 'package:nugroho_javacode/utils/services/hive_service.dart';
-import '../../features/home/models/user_detail_model.dart';
 import '../../shared/controllers/global_controllers/global_controller.dart';
 
 class DioService extends GetxService {
@@ -101,116 +100,5 @@ class DioService extends GetxService {
       log('[UNEXPECTED ERROR] $e');
       rethrow;
     }
-  }
-
-  // Login method
-  static Future<Map<String, dynamic>> login({
-    required String email,
-    required String password,
-  }) async {
-    final response = await req(
-      "/auth/login",
-      method: "POST",
-      data: {
-        'email': email.trim(),
-        'password': password.trim(),
-      },
-    );
-
-    if (response == null) {
-      throw Exception('Login failed: empty response');
-    }
-
-    return response;
-  }
-
-  // get user detail
-  static Future<UserDetail> getUserDetail(int userId) async {
-    final token = LocalStorageService.getToken();
-    final response = await req(
-      "user/detail/$userId",
-      method: "GET",
-      token: token,
-    );
-
-    return UserDetail.fromJson(response!);
-  }
-
-  // get menu
-  static Future<Map<String, dynamic>?> getMenu({String? category}) async {
-    String? token = LocalStorageService.getToken();
-    String endpoint = "/menu/all";
-    if (category != null) {
-      endpoint = "/menu/kategori/$category";
-    }
-    return await req(endpoint, method: "GET", token: token);
-  }
-
-  // get detail menu by id
-  static Future<Map<String, dynamic>?> getMenuById(int id) async {
-    String? token = LocalStorageService.getToken();
-    return await req("/menu/detail/$id", method: "GET", token: token);
-  }
-
-  // get promo
-  static Future<Map<String, dynamic>?> getPromos({String? type}) async {
-    String? token = LocalStorageService.getToken();
-    String endpoint = "/promo/all";
-    if (type != null) {
-      endpoint = "/promo/type/$type";
-    }
-    return await req(endpoint, method: "GET", token: token);
-  }
-
-  // get promo by id
-  static Future<Map<String, dynamic>?> getPromoById(int id) async {
-    String? token = LocalStorageService.getToken();
-    return await req("/promo/detail/$id", method: "GET", token: token);
-  }
-
-  // get order by user id
-  static Future<Map<String, dynamic>?> getOrderByUserId(int userId) async {
-    String? token = LocalStorageService.getToken();
-    return await req(
-      "/order/user/$userId",
-      method: "GET",
-      token: token,
-    );
-  }
-
-  // get order detail
-  static Future<Map<String, dynamic>?> getOrderDetail(int orderId) async {
-    String? token = LocalStorageService.getToken();
-    return await req("/order/detail/$orderId", method: "GET", token: token);
-  }
-
-  // Get User Orders by Status
-  static Future<Map<String, dynamic>?> getUserOrdersByStatus(
-      int userId, String status) async {
-    String? token = LocalStorageService.getToken();
-    return await req("/order/user/$userId/status/$status",
-        method: "GET", token: token);
-  }
-
-  static Future<Map<String, dynamic>?> createOrder(Map<String, dynamic> data) async {
-  try {
-    String? token = LocalStorageService.getToken();
-    final response = await req("/order/add", method: "POST", data: data, token: token);
-    
-    if (response != null && response['status_code'] == 200) {
-      return response['data'];
-    } else {
-      throw Exception(response?['message'] ?? 'Failed to create order');
-    }
-  } catch (e) {
-    log('Order creation error: $e');
-    rethrow;
-  }
-}
-
-  // delete order
-  static Future<Map<String, dynamic>?> deleteOrder(int orderId) async {
-    String? token = LocalStorageService.getToken();
-    return await req("/order/delete/$orderId", method: "DELETE", token: token);
   }
 }

@@ -6,7 +6,6 @@ abstract class Routes {
   static const String noConnectionRoute = '/no_connection';
   static const String forgotPasswordRoute = '/forgot_password';
   static const String otpRoute = '/otp';
-  static const String listRoute = '/list';
   static const String getLocationRoute = '/get_location';
   static const String compassRoute = '/compass';
   static const String musicPlayerRoute = '/music_player';
@@ -19,6 +18,6 @@ abstract class Routes {
   static const String reviewAddReviewRoute = '/review_add_review';
   static const String voucherRoute = '/voucher';
   static const String voucherDetailRoute = '/voucher_detail';
-static const String detailOrderRoute = '/detail_order';
-static const String chatReviewRoute = '/chat_review';
+  static const String detailOrderRoute = '/detail_order';
+  static const String chatReviewRoute = '/chat_review';
 }

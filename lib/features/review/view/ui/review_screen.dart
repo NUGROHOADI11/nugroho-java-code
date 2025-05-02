@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:nugroho_javacode/features/review/controllers/review_controller.dart';
 import '../../../../configs/routes/route.dart';
 import '../../../../shared/styles/color_style.dart';
+import '../../../../shared/widgets/app_bar.dart';
 
 class ReviewScreen extends StatelessWidget {
   ReviewScreen({super.key});
@@ -15,33 +16,7 @@ class ReviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Review'.tr,
-              style: Get.textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: ColorStyle.primary,
-              ),
-            ),
-            SizedBox(height: 4.h),
-            Container(
-              width: 65.w,
-              height: 2.h,
-              color: ColorStyle.primary,
-            ),
-          ],
-        ),
-        centerTitle: true,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
-        ),
-        elevation: 3,
-        shadowColor: const Color.fromARGB(66, 0, 0, 0),
-        backgroundColor: Colors.white,
-      ),
+      appBar: CustomAppBar(title: 'Review'.tr,showUnderline: true,),
       body: Obx(() {
         if (_controller.isLoading.value) {
           return const Center(child: CircularProgressIndicator());

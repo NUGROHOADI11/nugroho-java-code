@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:get/get.dart';
 
-import '../../../utils/services/dio_service.dart';
 import '../../cart/controllers/cart_controller.dart';
+import '../../detail_promo/repositories/detail_promo_repository.dart';
 
 class VoucherController extends GetxController {
   static VoucherController get to => Get.find();
@@ -26,7 +26,7 @@ class VoucherController extends GetxController {
     try {
       isLoading(true);
       errorMessage('');
-      final response = await DioService.getPromos(type: 'voucher');
+      final response = await DetailPromoRepository.getPromos(type: 'voucher');
 
       if (response != null && response['status_code'] == 200) {
         vouchers.assignAll(response['data'] ?? []);

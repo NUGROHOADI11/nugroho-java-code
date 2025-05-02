@@ -14,7 +14,7 @@ import '../../../configs/routes/route.dart';
 import '../../../constants/cores/api/api_constant.dart';
 import '../../../shared/controllers/global_controllers/global_controller.dart';
 import '../../../shared/styles/google_text_style.dart';
-import '../../../utils/services/dio_service.dart';
+import '../repositories/sign_in_repository.dart';
 
 class SignInController extends GetxController {
   static SignInController get to => Get.find();
@@ -60,23 +60,6 @@ class SignInController extends GetxController {
     }
   }
 
-  var languageList = ["English", "Indonesia"];
-  var selectedLanguage = "English".obs;
-
-  void selectLanguage(String language) {
-    selectedLanguage.value = language;
-
-    if (language == "Indonesia") {
-      Get.updateLocale(const Locale("id", "ID"));
-      return;
-    }
-
-    if (language == "English") {
-      Get.updateLocale(const Locale("en", "US"));
-      return;
-    }
-  }
-
   Future<void> validateForm(context) async {
     await GlobalController.to.checkConnection();
     bool isValid = formKey.currentState!.validate();
@@ -105,7 +88,7 @@ class SignInController extends GetxController {
 
       EasyLoading.dismiss();
 
-      final loginResponse = await DioService.login(
+      final loginResponse = await SignInRepository.login(
         email: emailCtrl.text.trim(),
         password: passwordCtrl.text.trim(),
       );

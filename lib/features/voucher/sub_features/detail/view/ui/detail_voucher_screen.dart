@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:nugroho_javacode/features/voucher/controllers/voucher_controller.dart';
-import 'package:intl/intl.dart'; // Add this import for date formatting
+import 'package:intl/intl.dart'; 
 
 import '../../../../../../shared/styles/color_style.dart';
 import '../../../../constants/voucher_assets_constant.dart';
@@ -21,10 +21,9 @@ class DetailVoucherScreen extends StatelessWidget {
     final int valid = arguments['valid'];
     final String image = arguments['image'];
 
-    // Calculate dates
     final now = DateTime.now();
     final endDate = now.add(Duration(days: valid));
-    final dateFormat = DateFormat('dd/MM/yyyy'); // Choose your preferred format
+    final dateFormat = DateFormat('dd/MM/yyyy');
 
     return Scaffold(
       appBar: _buildAppBar(),
@@ -110,9 +109,10 @@ class DetailVoucherScreen extends StatelessWidget {
                   size: 20,
                 ),
                 const SizedBox(width: 10),
-                const Text(
-                  "Valid Date",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                Text(
+                  "Valid Date".tr,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 17),
                 ),
                 const Spacer(),
                 Text("$startDate - $endDate"),

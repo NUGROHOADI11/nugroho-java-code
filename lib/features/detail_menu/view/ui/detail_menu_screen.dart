@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nugroho_javacode/utils/extensions/int_extensions.dart';
 import '../../../../shared/styles/color_style.dart';
+import '../../../../shared/widgets/app_bar.dart';
 import '../../../../shared/widgets/skeleton.dart';
 import '../../../cart/controllers/cart_controller.dart';
 import '../../../cart/models/cart_model.dart';
@@ -28,19 +29,7 @@ class DetailMenuScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF2F2F2),
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Text('Detail Menu'),
-        centerTitle: true,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Get.back(),
-        ),
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(bottom: Radius.circular(30)),
-        ),
-      ),
+      appBar: CustomAppBar(title: 'Detail Menu'.tr,),
       body: Obx(() {
         if (controller.isLoading.value) {
           return const SkeletonLoading(count: 1, width: 100.0, height: 300.0);
@@ -234,7 +223,7 @@ class DetailMenuScreen extends StatelessWidget {
               cartController.updateItem(existingIndex, updatedItem);
             }
             Get.back();
-            Get.snackbar("Sukses", "Pesanan diperbarui",
+            Get.snackbar("Sukses".tr, "Pesanan diperbarui".tr,
                 backgroundColor: Colors.green,
                 duration: const Duration(seconds: 3));
           } else {
@@ -251,7 +240,7 @@ class DetailMenuScreen extends StatelessWidget {
               notes: controller.note.value,
             ));
             Get.back();
-            Get.snackbar("Sukses", "Pesanan ditambahkan",
+            Get.snackbar("Sukses".tr, "Pesanan ditambahkan".tr,
                 backgroundColor: Colors.green,
                 duration: const Duration(seconds: 3));
           }
@@ -301,8 +290,8 @@ class DetailMenuScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10),
-              const Text('Pilih Level',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
+              Text('Pilih Level'.tr,
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
               const SizedBox(height: 12),
               Obx(() => Wrap(
                     spacing: 8,
@@ -359,8 +348,8 @@ class DetailMenuScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10),
-              const Text('Pilih Topping',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
+              Text('Pilih Topping'.tr,
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
               const SizedBox(height: 12),
               Obx(() => Wrap(
                     spacing: 8,
@@ -425,16 +414,16 @@ class DetailMenuScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10),
-              const Text('Buat Catatan',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
+              Text('Buat Catatan'.tr,
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
               const SizedBox(height: 12),
               TextField(
                 controller: noteController,
                 maxLength: 100,
-                decoration: const InputDecoration(
-                  hintText: 'Contoh: Tidak pedas',
+                decoration: InputDecoration(
+                  hintText: 'Contoh: Tidak pedas'.tr,
                   suffixIcon:
-                      Icon(Icons.check_circle, color: ColorStyle.primary),
+                      const Icon(Icons.check_circle, color: ColorStyle.primary),
                 ),
                 onSubmitted: (val) {
                   controller.note.value = val;

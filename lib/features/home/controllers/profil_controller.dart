@@ -8,11 +8,11 @@ import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:nugroho_javacode/features/cart/controllers/cart_controller.dart';
+import 'package:nugroho_javacode/features/home/repositories/home_repository.dart';
 
 import '../../../configs/routes/route.dart';
 import '../../../shared/styles/color_style.dart';
 import '../../../shared/widgets/image_picker_dialog.dart';
-import '../../../utils/services/dio_service.dart';
 import '../../../utils/services/hive_service.dart';
 import '../models/user_detail_model.dart';
 
@@ -66,7 +66,7 @@ class ProfilController extends GetxController {
         maskType: EasyLoadingMaskType.black,
       );
 
-      final userData = await DioService.getUserDetail(idUser!);
+      final userData = await HomeRepository.getUserDetail(idUser!);
       user.value = userData;
       nama.value = userData.name;
       birthDate.value = userData.birthDate;

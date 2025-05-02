@@ -15,12 +15,12 @@ class ChatReviewController extends GetxController {
   final RxBool isSending = false.obs;
 
   final List<String> adminResponses = [
-    "Terima kasih atas masukan Anda. Kami akan segera menindaklanjuti keluhan ini.",
-    "Mohon maaf atas ketidaknyamanan yang terjadi. Tim kami sedang menangani masalah ini.",
-    "Kami sangat menghargai umpan balik Anda. Ini akan membantu kami meningkatkan layanan.",
-    "Laporan Anda telah kami terima dan sedang dalam proses pengecekan.",
-    "Terima kasih telah meluangkan waktu untuk memberikan ulasan. Kami akan memperbaiki kekurangan ini.",
-    "Kami menyesal atas pengalaman yang tidak memuaskan. Tim kami akan melakukan evaluasi internal.",
+    "Terima kasih atas masukan Anda. Kami akan segera menindaklanjuti keluhan ini.".tr,
+    "Mohon maaf atas ketidaknyamanan yang terjadi. Tim kami sedang menangani masalah ini.".tr,
+    "Kami sangat menghargai umpan balik Anda. Ini akan membantu kami meningkatkan layanan.".tr,
+    "Laporan Anda telah kami terima dan sedang dalam proses pengecekan.".tr,
+    "Terima kasih telah meluangkan waktu untuk memberikan ulasan. Kami akan memperbaiki kekurangan ini.".tr,
+    "Kami menyesal atas pengalaman yang tidak memuaskan. Tim kami akan melakukan evaluasi internal.".tr,
     "Masukan Anda sangat berharga bagi kami. Kami akan berusaha lebih baik lagi ke depannya."
   ];
 
@@ -119,18 +119,18 @@ class ChatReviewController extends GetxController {
 
   String _generateAdminResponse(review) {
     if (review.rating <= 2) {
-      return "Mohon maaf atas ketidaknyamanan yang Anda alami. Kami sangat menyesalkan hal ini dan akan segera mengambil tindakan perbaikan.";
+      return "Mohon maaf atas ketidaknyamanan yang Anda alami. Kami sangat menyesalkan hal ini dan akan segera mengambil tindakan perbaikan.".tr;
     } else if (review.rating == 3) {
-      return "Terima kasih atas masukan Anda. Kami akan mengevaluasi dan memperbaiki kekurangan yang Anda sampaikan.";
+      return "Terima kasih atas masukan Anda. Kami akan mengevaluasi dan memperbaiki kekurangan yang Anda sampaikan.".tr;
     } else {
-      return "Terima kasih atas ulasan positif Anda! Kami senang Anda menikmati pengalaman tersebut dan akan terus berusaha memberikan yang terbaik.";
+      return "Terima kasih atas ulasan positif Anda! Kami senang Anda menikmati pengalaman tersebut dan akan terus berusaha memberikan yang terbaik.".tr;
     }
   }
 
   String getMonthName(int month) {
-    const monthNames = [
-      "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-      "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+    var monthNames = [
+      "Januari".tr, "Februari".tr, "Maret".tr, "April".tr, "Mei".tr, "Juni".tr,
+      "Juli".tr, "Agustus".tr, "September".tr, "Oktober".tr, "November".tr, "Desember".tr
     ];
     return monthNames[month - 1];
   }

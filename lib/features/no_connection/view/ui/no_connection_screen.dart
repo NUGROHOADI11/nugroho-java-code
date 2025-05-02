@@ -55,8 +55,8 @@ class NoConnectionScreen extends StatelessWidget {
                     Get.back();
                   } else {
                     Get.snackbar(
-                      "Tidak Ada Koneksi",
-                      "Masih tidak ada koneksi, coba lagi nanti.",
+                      "Tidak Ada Koneksi".tr,
+                      "Masih tidak ada koneksi, coba lagi nanti.".tr,
                       snackPosition: SnackPosition.BOTTOM,
                       backgroundColor: Colors.red,
                       colorText: Colors.white,

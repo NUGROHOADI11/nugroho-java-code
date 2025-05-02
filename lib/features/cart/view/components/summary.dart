@@ -42,7 +42,7 @@ Widget _buildSummaryDetails() {
         const Divider(height: 1),
         if (CartController.to.selectedVoucherId.value == -1) ...[
           _buildSummaryRow(
-            "Diskon",
+            "Diskon".tr,
             CartController.to.calculateDiscount().formatCurrency(),
             icon: Icons.discount,
             valueColor: Colors.red,
@@ -54,10 +54,10 @@ Widget _buildSummaryDetails() {
           const Divider(height: 1),
         ],
         _buildSummaryRow(
-          "Voucher",
+          "Voucher".tr,
           CartController.to.selectedVoucherId.value != -1
               ? CartController.to.selectedVoucherValue.toInt().formatCurrency()
-              : "Pilih Voucher",
+              : "Pilih Voucher".tr,
           icon: Icons.card_giftcard,
           isTappable: true,
           onTap: () {
@@ -66,8 +66,8 @@ Widget _buildSummaryDetails() {
         ),
         const Divider(height: 1),
         _buildSummaryRow(
-          "Pembayaran",
-          "Pay Later",
+          "Pembayaran".tr,
+          "Pay Later".tr,
           icon: Icons.payments,
           isTappable: true,
         ),

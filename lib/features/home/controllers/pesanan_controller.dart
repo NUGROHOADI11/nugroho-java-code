@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import '../../../utils/services/dio_service.dart';
+import 'package:nugroho_javacode/features/detail_order/repositories/detail_order_repository.dart';
 import '../../../utils/services/hive_service.dart';
 import '../models/order_model.dart';
 import 'package:logger/logger.dart';
@@ -41,7 +41,7 @@ class PesananController extends GetxController {
       hasMoreOngoing(true);
       hasMoreHistory(true);
 
-      final response = await DioService.getOrderByUserId(idUser!);
+      final response = await DetailOrderRepository.getOrderByUserId(idUser!);
 
       if (response == null) {
         throw Exception("Response is null");

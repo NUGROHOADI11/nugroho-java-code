@@ -1,6 +1,6 @@
 import 'dart:developer';
 import 'package:get/get.dart';
-import '../../../utils/services/dio_service.dart';
+import 'package:nugroho_javacode/features/detail_menu/repositories/detail_menu_repository.dart';
 import '../../cart/controllers/cart_controller.dart';
 import '../models/detail_menu_model.dart';
 
@@ -34,7 +34,7 @@ class DetailMenuController extends GetxController {
     isLoading.value = true;
     try {
       isLoading.value = true;
-      final response = await DioService.getMenuById(id);
+      final response = await DetailMenuRepository.getMenuById(id);
       log('Response: $response');
       if (response != null && response['status_code'] == 200) {
         final data = response['data'];

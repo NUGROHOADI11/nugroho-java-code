@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import '../../../utils/services/dio_service.dart';
+import '../../detail_menu/repositories/detail_menu_repository.dart';
+import '../../detail_promo/repositories/detail_promo_repository.dart';
 import '../models/menu_model.dart';
 import '../models/promo_model.dart';
 
@@ -27,7 +28,7 @@ class BerandaController extends GetxController {
   Future<void> fetchPromos() async {
     try {
       isLoading(true);
-      final response = await DioService.getPromos();
+      final response = await DetailPromoRepository.getPromos();
 
       if (response != null && response['status_code'] == 200) {
         final List<dynamic> promoData = response['data'] ?? [];
@@ -56,9 +57,9 @@ class BerandaController extends GetxController {
 
       Map<String, dynamic>? response;
       if (selectedCategory.value == 'semua') {
-        response = await DioService.getMenu();
+        response = await DetailMenuRepository.getMenu();
       } else {
-        response = await DioService.getMenu(category: selectedCategory.value);
+        response = await DetailMenuRepository.getMenu(category: selectedCategory.value);
       }
 
       if (response == null || response['data'] == null) {

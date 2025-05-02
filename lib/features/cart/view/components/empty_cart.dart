@@ -13,7 +13,7 @@ Widget buildEmptyCart() {
         Icon(Icons.shopping_cart_outlined, size: 60, color: Colors.grey[400]),
         SizedBox(height: 16.h),
         Text(
-          "Keranjang kosong",
+          "Keranjang kosong".tr,
           style: TextStyle(
             fontSize: 16.sp,
             color: Colors.grey[600],

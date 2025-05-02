@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import '../../../utils/services/dio_service.dart';
+import 'package:nugroho_javacode/features/detail_order/repositories/detail_order_repository.dart';
 import '../models/order_detail_model.dart';
 
 class DetailOrderController extends GetxController {
@@ -27,7 +27,7 @@ class DetailOrderController extends GetxController {
     isLoading.value = true;
     errorMessage('');
 
-    final response = await DioService.getOrderDetail(id);
+    final response = await DetailOrderRepository.getOrderDetail(id);
     logger.d('Response: $response');
 
     if (response?['status_code'] == 200 && response!['data'] != null) {

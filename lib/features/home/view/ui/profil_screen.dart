@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:nugroho_javacode/features/home/controllers/profil_controller.dart';
 import 'package:nugroho_javacode/shared/styles/color_style.dart';
 import 'package:pinput/pinput.dart';
 
 import '../../../../configs/routes/route.dart';
+import '../../../../shared/widgets/app_bar.dart';
 import '../components/profil_component/info_card.dart';
 import '../components/profil_component/language_option.dart';
 import '../components/profil_component/list_tile.dart';
@@ -20,33 +20,8 @@ class ProfilScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'Profil'.tr,
-              style: Get.textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: ColorStyle.primary,
-              ),
-            ),
-            SizedBox(height: 4.h),
-            Container(
-              width: 65.w,
-              height: 2.h,
-              color: ColorStyle.primary,
-            ),
-          ],
-        ),
-        centerTitle: true,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
-        ),
-        elevation: 3,
-        shadowColor: const Color.fromARGB(66, 0, 0, 0),
-        backgroundColor: Colors.white,
-      ),
+      appBar: CustomAppBar(title: 'Profil'.tr, showUnderline: true,),
+        
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Obx(() {
