@@ -1,4 +1,4 @@
- import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -6,20 +6,21 @@ import 'package:get/get.dart';
 import '../../../../configs/routes/route.dart';
 import '../../../../shared/styles/color_style.dart';
 import '../../../../shared/widgets/skeleton.dart';
+import '../../../home/models/promo_model.dart';
 
-Widget buildVoucherCard(Map<String, dynamic> voucher, controller) {
+Widget buildVoucherCard(Promo voucher, controller) {
     return InkWell(
       onTap: () {
         Get.toNamed(Routes.voucherDetailRoute, arguments: {
-          'id': voucher['id_promo'],
-          'title': voucher['nama'],
-          'terms': voucher['syarat_ketentuan'],
-          'valid': voucher['kadaluarsa'],
-          'image': voucher['foto']
+          'id': voucher.id,
+          'title': voucher.name,
+          'terms': voucher.terms,
+          'valid': voucher.exp,
+          'image': voucher.photo
         });
       },
       child: Obx(() {
-        final isSelected = controller.isVoucherSelected(voucher['id_promo']);
+        final isSelected = controller.isVoucherSelected(voucher.id);
         return Container(
           margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
           decoration: BoxDecoration(
@@ -48,7 +49,7 @@ Widget buildVoucherCard(Map<String, dynamic> voucher, controller) {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          voucher['nama'],
+                          voucher.name,
                           style: TextStyle(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.bold,
@@ -57,7 +58,7 @@ Widget buildVoucherCard(Map<String, dynamic> voucher, controller) {
                         Checkbox(
                           value: isSelected,
                           onChanged: (_) =>
-                              controller.selectVoucher(voucher['id_promo']),
+                              controller.selectVoucher(voucher.id),
                           activeColor: ColorStyle.primary,
                         ),
                       ],
@@ -68,7 +69,7 @@ Widget buildVoucherCard(Map<String, dynamic> voucher, controller) {
               ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(20.r)),
                 child: CachedNetworkImage(
-                  imageUrl: voucher['foto'],
+                  imageUrl: voucher.photo.toString(),
                   width: double.infinity,
                   fit: BoxFit.cover,
                   placeholder: (context, url) => Container(

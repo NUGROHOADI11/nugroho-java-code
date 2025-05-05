@@ -4,14 +4,15 @@ import 'package:get/get.dart';
 
 import '../../cart/controllers/cart_controller.dart';
 import '../../detail_promo/repositories/detail_promo_repository.dart';
+import '../../home/models/promo_model.dart';
 
 class VoucherController extends GetxController {
   static VoucherController get to => Get.find();
 
   RxInt selectedVoucherId = (-1).obs;
   RxBool isLoading = false.obs;
-  RxList<dynamic> vouchers = <dynamic>[].obs;
   RxString errorMessage = ''.obs;
+  var vouchers = <Promo>[].obs;
 
   @override
   void onInit() {
@@ -29,7 +30,8 @@ class VoucherController extends GetxController {
       final response = await DetailPromoRepository.getPromos(type: 'voucher');
 
       if (response != null && response['status_code'] == 200) {
-        vouchers.assignAll(response['data'] ?? []);
+        final List<dynamic> voucherData = response['data'] ?? [];
+        vouchers.assignAll(voucherData.map((json) => Promo.fromJson(json)));
       } else {
         errorMessage('No vouchers available'.tr);
       }

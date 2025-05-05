@@ -14,7 +14,8 @@ class BerandaController extends GetxController {
   var promoDetail = Rxn<Promo>();
   var selectedCategory = 'semua'.obs;
   var quantity = 0.obs;
-  var isLoading = false.obs;
+  var isPromoLoading = false.obs;
+  var isMenuLoading = false.obs;
   var errorMessage = ''.obs;
   var searchQuery = ''.obs;
 
@@ -27,7 +28,7 @@ class BerandaController extends GetxController {
 
   Future<void> fetchPromos() async {
     try {
-      isLoading(true);
+      isPromoLoading(true);
       final response = await DetailPromoRepository.getPromos();
 
       if (response != null && response['status_code'] == 200) {
@@ -46,13 +47,13 @@ class BerandaController extends GetxController {
       );
       if (kDebugMode) print('Promo fetch error: $e');
     } finally {
-      isLoading(false);
+      isPromoLoading(false);
     }
   }
 
   Future<void> fetchMenuItems() async {
     try {
-      isLoading(true);
+      isMenuLoading(true);
       errorMessage('');
 
       Map<String, dynamic>? response;
@@ -90,7 +91,7 @@ class BerandaController extends GetxController {
         duration: const Duration(seconds: 5),
       );
     } finally {
-      isLoading(false);
+      isMenuLoading(false);
     }
   }
 

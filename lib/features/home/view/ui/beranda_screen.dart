@@ -53,22 +53,24 @@ class BerandaScreen extends StatelessWidget {
       ),
       body: SmartRefresher(
         controller: _refreshController,
-        onRefresh: () async {
-          await controller.fetchMenuItems();
-          await controller.fetchPromos();
-          _refreshController.refreshCompleted();
-        },
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              buildPromoSection(controller),
-              const SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: buildCategoryButtons(controller),
+        enablePullDown: true,
+        enablePullUp: false,
+        physics: const AlwaysScrollableScrollPhysics(),
+        onRefresh: _onRefresh,
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  buildPromoSection(controller),
+                  const SizedBox(height: 10),
+                  buildCategoryButtons(controller),
+                ],
               ),
-              Obx(() {
-                if (controller.isLoading.value &&
+            ),
+            SliverToBoxAdapter(
+              child: Obx(() {
+                if (controller.isMenuLoading.value &&
                     controller.menuItems.isEmpty) {
                   return const SkeletonLoading(
                       count: 3, width: 100.0, height: 50.0);
@@ -76,32 +78,41 @@ class BerandaScreen extends StatelessWidget {
                 if (controller.errorMessage.isNotEmpty) {
                   return Center(
                     child: ElevatedButton(
-                      onPressed: () {
-                        controller.fetchMenuItems();
-                        _refreshController.refreshCompleted();
-                      },
+                      onPressed: _retryFetch,
                       child: Text('Retry'.tr),
                     ),
                   );
                 }
 
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (controller.selectedCategory.value == 'semua')
-                        buildAllCategoriesView(controller, cartController)
-                      else
-                        buildSingleCategoryView(controller, cartController),
-                    ],
-                  ),
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (controller.selectedCategory.value == 'semua')
+                      buildAllCategoriesView(controller, cartController)
+                    else
+                      buildSingleCategoryView(controller, cartController),
+                  ],
                 );
               }),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
+  }
+
+  Future<void> _onRefresh() async {
+    try {
+      await controller.fetchMenuItems();
+      await controller.fetchPromos();
+      _refreshController.refreshCompleted();
+    } catch (e) {
+      _refreshController.refreshFailed();
+    }
+  }
+
+  void _retryFetch() {
+    controller.fetchMenuItems();
+    _refreshController.requestRefresh();
   }
 }

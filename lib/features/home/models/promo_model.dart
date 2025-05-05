@@ -4,6 +4,7 @@ class Promo {
   final String type;
   final int? discount;
   final int? nominal;
+  final String? exp;
   final String? photo;
   final String terms;
 
@@ -13,6 +14,7 @@ class Promo {
     required this.type,
     this.discount,
     this.nominal,
+    this.exp,
     this.photo,
     required this.terms,
   });
@@ -24,6 +26,7 @@ class Promo {
       type: json['type'],
       discount: json['diskon'],
       nominal: json['nominal'],
+      exp: json['kadaluarsa'],
       photo: json['foto'],
       terms: json['syarat_ketentuan'],
     );

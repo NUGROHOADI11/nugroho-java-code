@@ -8,7 +8,7 @@ import '../../../../../shared/widgets/skeleton.dart';
 
 Widget buildPromoSection(controller) {
   return Obx(() {
-    if (controller.isLoading.value) {
+    if (controller.isPromoLoading.value) {
       return const SkeletonLoading(count: 1, width: 100.0, height: 100.0);
     }
 

@@ -56,12 +56,12 @@ Widget buildBottomBar(BuildContext context, controller) {
                     ? () {
                         final selected = controller.vouchers.firstWhere(
                           (v) =>
-                              v['id_promo'] ==
+                              v.id ==
                               controller.selectedVoucherId.value,
                         );
                         CartController.to.applyVoucher(
-                          selected['id_promo'],
-                          selected['nominal'],
+                          selected.id,
+                          selected.nominal,
                         );
                         Get.back();
                       }

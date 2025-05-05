@@ -6,6 +6,7 @@ import '../../features/detail_menu/models/detail_menu_model.dart';
 import '../../features/home/models/order_model.dart';
 // import '../../shared/models/user_model.dart';
 
+@Deprecated("no longer used")
 class HttpService {
   HttpService._();
   static final HttpService httpService = HttpService._();

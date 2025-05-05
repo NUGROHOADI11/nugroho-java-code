@@ -8,6 +8,7 @@ Widget buildCategoryButtons(controller) {
     scrollDirection: Axis.horizontal,
     child: Row(
       children: [
+        const SizedBox(width: 12),
         buildCategoryButton(
           controller: controller,
           icon: Icons.menu,
@@ -35,6 +36,7 @@ Widget buildCategoryButtons(controller) {
           label: "Snack".tr,
           category: "snack",
         ),
+        const SizedBox(width: 12),
       ],
     ),
   );
