@@ -11,6 +11,7 @@ import 'package:nugroho_javacode/features/detail_promo/repositories/detail_promo
 import '../../../utils/services/hive_service.dart';
 import '../../detail_menu/models/detail_menu_model.dart';
 import '../../home/controllers/pesanan_controller.dart';
+import '../../home/models/promo_model.dart';
 import '../models/cart_model.dart';
 
 class CartController extends GetxController {
@@ -23,7 +24,7 @@ class CartController extends GetxController {
   final menuDetails = <int, MenuDetailModel>{};
 
   final menuDetail = Rxn<MenuDetailModel>();
-  final discounts = <dynamic>[].obs;
+  var discounts = <Promo>[].obs;
 
   final isLoading = false.obs;
   final errorMessage = ''.obs;
@@ -169,13 +170,14 @@ class CartController extends GetxController {
     try {
       final response = await DetailPromoRepository.getPromos(type: 'diskon');
       if (response != null && response['status_code'] == 200) {
-        discounts.assignAll(response['data'] ?? []);
+        final List<dynamic> diskonData = response['data'] ?? [];
+        discounts.assignAll(diskonData.map((json) => Promo.fromJson(json)));
       } else {
         errorMessage('No vouchers available'.tr);
       }
     } catch (e) {
-      log('Error fetching vouchers: $e');
-      errorMessage('Failed to load vouchers'.tr);
+      log('Error fetching diskons: $e');
+      errorMessage('Failed to load diskons'.tr);
     } finally {
       _setLoading(false);
     }
@@ -194,7 +196,7 @@ class CartController extends GetxController {
       double remainingAmount = subTotalPrice.toDouble();
 
       for (var item in discounts) {
-        final percent = (item['diskon']?.toDouble() ?? 0);
+        final percent = (item.discount?.toDouble() ?? 0);
         final discount = (percent / 100) * remainingAmount;
         totalDiscount += discount;
         remainingAmount -= discount;

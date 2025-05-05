@@ -5,11 +5,10 @@ import '../../../../shared/styles/color_style.dart';
 import '../../../../shared/widgets/app_bar.dart';
 import '../../../../shared/widgets/skeleton.dart';
 import '../../../cart/controllers/cart_controller.dart';
-import '../../../cart/models/cart_model.dart';
 import '../../controllers/detail_menu_controller.dart';
-import '../../models/detail_menu_model.dart';
+import '../components/action_button.dart';
 import '../components/detail_tile.dart';
-import '../components/qty_button.dart';
+import '../components/header.dart';
 
 class DetailMenuScreen extends StatelessWidget {
   const DetailMenuScreen({super.key});
@@ -29,7 +28,9 @@ class DetailMenuScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF2F2F2),
-      appBar: CustomAppBar(title: 'Detail Menu'.tr,),
+      appBar: CustomAppBar(
+        title: 'Detail Menu'.tr,
+      ),
       body: Obx(() {
         if (controller.isLoading.value) {
           return const SkeletonLoading(count: 1, width: 100.0, height: 300.0);
@@ -50,6 +51,10 @@ class DetailMenuScreen extends StatelessWidget {
                 height: 200,
                 width: 300,
                 fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) {
+                  return const Icon(Icons.broken_image,
+                      size: 100, color: Colors.grey);
+                },
               ),
             ),
             const SizedBox(height: 12),
@@ -62,7 +67,7 @@ class DetailMenuScreen extends StatelessWidget {
                 ),
                 child: ListView(
                   children: [
-                    _buildHeader(menu, controller),
+                    buildHeader(menu, controller),
                     const SizedBox(height: 8),
                     Text(menu.menu.deskripsi,
                         style: const TextStyle(color: Colors.grey)),
@@ -115,7 +120,7 @@ class DetailMenuScreen extends StatelessWidget {
                       onTap: () => _showNoteBottomSheet(context),
                     ),
                     const SizedBox(height: 20),
-                    _buildActionButton(
+                    buildActionButton(
                         controller, cartController, menuId, qtyArg, menu),
                   ],
                 ),
@@ -124,139 +129,6 @@ class DetailMenuScreen extends StatelessWidget {
           ],
         );
       }),
-    );
-  }
-
-  Widget _buildHeader(menu, DetailMenuController controller) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          menu.menu.nama,
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF00838F),
-          ),
-        ),
-        Obx(() {
-          final qty = controller.quantity.value;
-          return Row(
-            children: [
-              if (qty > 0)
-                buildQtyButton(Icons.remove, () {
-                  if (qty > 0) controller.quantity.value--;
-                }),
-              if (qty > 0) ...[
-                const SizedBox(width: 8),
-                Text('$qty',
-                    style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.bold)),
-                const SizedBox(width: 8),
-              ],
-              buildQtyButton(Icons.add, () {
-                controller.quantity.value++;
-              }),
-            ],
-          );
-        })
-      ],
-    );
-  }
-
-  Widget _buildActionButton(
-    DetailMenuController controller,
-    CartController cartController,
-    int menuId,
-    int qtyArg,
-    dynamic menu,
-  ) {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: () {
-          final qty = controller.quantity.value;
-
-          if (qty == 0) {
-            Get.snackbar(
-              'Peringatan',
-              'Silahkan pilih jumlah pesanan',
-              backgroundColor: Colors.red,
-              colorText: Colors.white,
-              duration: const Duration(seconds: 2),
-              snackPosition: SnackPosition.BOTTOM,
-            );
-            return;
-          }
-
-          final selectedLevelDetail = controller.menuDetail.value!.level
-              .firstWhere((level) => level.id == controller.selectedLevel.value,
-                  orElse: () => DetailItem(id: 0, keterangan: '', harga: 0));
-
-          final selectedToppingDetails =
-              controller.selectedTopping.map((toppingId) {
-            return controller.menuDetail.value!.topping.firstWhere(
-                (topping) => topping.id == toppingId,
-                orElse: () => DetailItem(id: 0, keterangan: '', harga: 0));
-          }).toList();
-
-          final totalToppingPrice = selectedToppingDetails
-              .map((topping) => topping.harga)
-              .fold(0, (previousValue, element) => previousValue + element);
-
-          final totalPrice =
-              menu.menu.harga + selectedLevelDetail.harga + totalToppingPrice;
-
-          if (qtyArg > 0) {
-            final existingIndex =
-                cartController.cartItems.indexWhere((e) => e.menuId == menuId);
-            if (existingIndex != -1) {
-              final updatedItem =
-                  cartController.cartItems[existingIndex].copyWith(
-                jumlah: qty,
-                level: controller.selectedLevel.value,
-                topping: controller.selectedTopping,
-                notes: controller.note.value,
-                hargaLevel: selectedLevelDetail.harga,
-                hargaTopping: totalToppingPrice,
-              );
-              cartController.updateItem(existingIndex, updatedItem);
-            }
-            Get.back();
-            Get.snackbar("Sukses".tr, "Pesanan diperbarui".tr,
-                backgroundColor: Colors.green,
-                duration: const Duration(seconds: 3));
-          } else {
-            cartController.addItem(CartItemModel(
-              menuId: menuId,
-              productName: menu.menu.nama,
-              harga: totalPrice,
-              jumlah: qty,
-              imageUrl: menu.menu.foto,
-              level: controller.selectedLevel.value,
-              hargaLevel: selectedLevelDetail.harga,
-              topping: controller.selectedTopping,
-              hargaTopping: totalToppingPrice,
-              notes: controller.note.value,
-            ));
-            Get.back();
-            Get.snackbar("Sukses".tr, "Pesanan ditambahkan".tr,
-                backgroundColor: Colors.green,
-                duration: const Duration(seconds: 3));
-          }
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: ColorStyle.primary,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(50),
-          ),
-          padding: const EdgeInsets.symmetric(vertical: 14),
-        ),
-        child: Text(
-          qtyArg > 0 ? 'Update Pesanan'.tr : 'Tambahkan Ke Pesanan'.tr,
-          style: const TextStyle(fontSize: 16, color: Colors.white),
-        ),
-      ),
     );
   }
 

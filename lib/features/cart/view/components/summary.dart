@@ -104,12 +104,12 @@ void _showDiscountModal() {
                 child: Row(
                   children: [
                     Text(
-                      discounts['nama'],
+                      discounts.name,
                       style: TextStyle(fontSize: 14.sp),
                     ),
                     const Spacer(),
                     Text(
-                      '${discounts['diskon'].toString()} %',
+                      '${discounts.discount.toString()} %',
                       style: TextStyle(fontSize: 14.sp),
                     ),
                   ],

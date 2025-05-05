@@ -1,10 +1,10 @@
 class Promo {
   final int id;
   final String name;
-  final String type;
+  final String? type;
   final int? discount;
   final int? nominal;
-  final String? exp;
+  final int? exp;
   final String? photo;
   final String terms;
 

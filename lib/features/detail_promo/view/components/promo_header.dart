@@ -25,12 +25,12 @@ Widget buildPromoHeader(BuildContext context, Promo promo, controller) {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          promo.type.toLowerCase() == 'diskon'
+          promo.type!.toLowerCase() == 'diskon'
               ? _buildDiscountTypeHeader(context, promo)
               : _buildRegularTypeHeader(context, promo),
           const SizedBox(height: 8),
           Text(
-            controller.stripHtmlTags(promo.terms).tr,
+            controller.stripHtmlTags(promo.terms),
             style: const TextStyle(
               color: Colors.white,
               fontSize: 12,
@@ -49,7 +49,7 @@ Widget _buildDiscountTypeHeader(BuildContext context, Promo promo) {
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       Text(
-        "${promo.type[0].toUpperCase()}${promo.type.substring(1)}",
+        "${promo.type![0].toUpperCase()}${promo.type?.substring(1)}",
         style: const TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.bold,
@@ -69,7 +69,7 @@ Widget _buildRegularTypeHeader(BuildContext context, Promo promo) {
   return Column(
     children: [
       Text(
-        "${promo.type[0].toUpperCase()}${promo.type.substring(1)}",
+        "${promo.type![0].toUpperCase()}${promo.type?.substring(1)}",
         style: const TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.bold,

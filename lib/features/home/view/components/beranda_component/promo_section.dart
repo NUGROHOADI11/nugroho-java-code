@@ -5,14 +5,15 @@ import '../../../../../configs/routes/route.dart';
 import '../../../../../constants/cores/assets/image_constant.dart';
 import '../../../../../shared/styles/color_style.dart';
 import '../../../../../shared/widgets/skeleton.dart';
+import '../../../controllers/beranda_controller.dart';
 
-Widget buildPromoSection(controller) {
+Widget buildPromoSection() {
   return Obx(() {
-    if (controller.isPromoLoading.value) {
+    if (BerandaController.to.isPromoLoading.value) {
       return const SkeletonLoading(count: 1, width: 100.0, height: 100.0);
     }
 
-    if (controller.promos.isEmpty) {}
+    if (BerandaController.to.promos.isEmpty) {}
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,9 +43,9 @@ Widget buildPromoSection(controller) {
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            itemCount: controller.promos.length,
+            itemCount: BerandaController.to.promos.length,
             itemBuilder: (context, index) {
-              final promo = controller.promos[index];
+              final promo = BerandaController.to.promos[index];
               return Container(
                 width: 220,
                 margin: const EdgeInsets.only(right: 12),
@@ -79,13 +80,13 @@ Widget buildPromoSection(controller) {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        if (promo.type.toLowerCase() == 'diskon')
+                        if (promo.type!.toLowerCase() == 'diskon')
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                promo.type[0].toUpperCase() +
-                                    promo.type.substring(1),
+                                promo.type![0].toUpperCase() +
+                                    promo.type!.substring(1),
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -129,8 +130,8 @@ Widget buildPromoSection(controller) {
                           Column(
                             children: [
                               Text(
-                                promo.type[0].toUpperCase() +
-                                    promo.type.substring(1),
+                                promo.type![0].toUpperCase() +
+                                    promo.type!.substring(1),
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,

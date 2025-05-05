@@ -62,7 +62,7 @@ class BerandaScreen extends StatelessWidget {
             SliverToBoxAdapter(
               child: Column(
                 children: [
-                  buildPromoSection(controller),
+                  buildPromoSection(),
                   const SizedBox(height: 10),
                   buildCategoryButtons(controller),
                 ],
@@ -74,14 +74,6 @@ class BerandaScreen extends StatelessWidget {
                     controller.menuItems.isEmpty) {
                   return const SkeletonLoading(
                       count: 3, width: 100.0, height: 50.0);
-                }
-                if (controller.errorMessage.isNotEmpty) {
-                  return Center(
-                    child: ElevatedButton(
-                      onPressed: _retryFetch,
-                      child: Text('Retry'.tr),
-                    ),
-                  );
                 }
 
                 return Column(
@@ -109,10 +101,5 @@ class BerandaScreen extends StatelessWidget {
     } catch (e) {
       _refreshController.refreshFailed();
     }
-  }
-
-  void _retryFetch() {
-    controller.fetchMenuItems();
-    _refreshController.requestRefresh();
   }
 }
